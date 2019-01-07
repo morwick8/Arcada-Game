@@ -2,7 +2,7 @@
 var Enemy = function(x, y, speed = 10, sprite) {
     //Enemies need variable speed, and location measured in this.x
     //and this.y.
-    time.x = x;
+    this.x = x;
     this.y = y;
     this.speed = speed;
     // The image/sprite for our enemies, this uses
@@ -15,7 +15,7 @@ var Enemy = function(x, y, speed = 10, sprite) {
 Enemy.prototype.update = function(dt) {
     //Movement is along the value x, and every millisecond
     // (incremented with dt, it will add some value based on speed
-    this.x = this.x*speed*dt;
+    this.x = this.x*this.speed*dt;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -34,9 +34,15 @@ let Player = function(x, y, sprite) {
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
+var allEnemies = [
+  new Enemy(0,0,10),
+  new Enemy(0,0,10),
+  new Enemy(0,0,10)
+];
+console.dir(allEnemies);
 // Place the player object in a variable called player
-
-
+var player = new Player(0,0);
+console.dir(player);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
