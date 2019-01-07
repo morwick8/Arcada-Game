@@ -35,39 +35,49 @@ var Player = function(x, y, sprite) {
 Player.prototype.update = function(dt) {
     //this is a placeholder for the player update until I can figure it out
     //
-    console.log('rendered player update');
 };
 //this is a placeholder render for player until I can figure this out
 Player.prototype.render = function() {
-    console.log(this.sprite);
-    console.log(this.x);
-    console.log(this.y);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 //This is a placeholder for handling input for player until I figure this computer
 Player.prototype.handleInput = function(keyPress) {
   if (keyPress === 'up'){
-    console.log('up pressed');
+    this.y = this.y - 80;
+    if (this.y < 0) {
+      console.log("display you win modal");
+      console.log('trigger end game');
+    };
   } else if (keyPress === 'down'){
-    console.log('down pressed');
+    if (this.y > 380) {
+    console.log('ignore down press');
+    } else {
+      this.y = this.y + 80;
+    };
   } else if (keyPress === 'left'){
-    console.log('left pressed');
+    if (this.x < 10) {
+    console.log('ignore left press');
+    } else {
+      this.x = this.x - 100;
+    };
   } else if (keyPress === 'right'){
-    console.log('right pressed');
-  }
+    if (this.x > 380) {
+    console.log('ignore right press');
+    } else {
+      this.x = this.x + 100;
+    };
+  };
 };
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
-  new Enemy(0,65,10),
-  new Enemy(0,145,10),
-  new Enemy(0,230,10)
+  new Enemy(0,63,10),
+  new Enemy(0,146,10),
+  new Enemy(0,229,10)
 ];
-console.dir(allEnemies);
 // Place the player object in a variable called player
-var player = new Player(210, 310);
-console.dir(player);
+var player = new Player(200, 390);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
