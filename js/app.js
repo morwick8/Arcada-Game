@@ -14,10 +14,13 @@ var Enemy = function(x, y, speed = 10, sprite) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     //Movement is along the value x, and every millisecond
-    // (incremented with dt, it will add some value based on speed
-    this.x = this.x*this.speed*dt;
+    // it will move some distance based on speed
+    //Enemy needs to wrap back to the beginning after it reaches the right
+    this.x = this.x+this.speed*dt;
+    if (this.x > 450) {
+      this.x = 0
+    };
 };
-
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -72,9 +75,9 @@ Player.prototype.handleInput = function(keyPress) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
-  new Enemy(0,63,10),
-  new Enemy(0,146,10),
-  new Enemy(0,229,10)
+  new Enemy(0,63,50),
+  new Enemy(0,146,200),
+  new Enemy(0,229,100)
 ];
 // Place the player object in a variable called player
 var player = new Player(200, 390);
