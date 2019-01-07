@@ -30,8 +30,30 @@ let Player = function(x, y, sprite) {
   this.x = x;
   this.y = y;
   this.sprite = 'images/char-princess-girl.png';
-}
+};
 
+Player.prototype.update = function(dt) {
+    //this is a placeholder for the player update until I can figure it out
+    //
+    this.x = this.x*this.speed*dt;
+};
+//this is a placeholder render for player until I can figure this out
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+//This is a placeholder for handling input for player until I figure this computer
+Player.prototype.handleInput = function(keyPress) {
+  if (keyPress === 'up'){
+    console.log('up pressed');
+  } else if (keyPress === 'down'){
+    console.log('down pressed');
+  } else if (keyPress === 'left'){
+    console.log('left pressed');
+  } else if (keyPress === 'right'){
+    console.log('right pressed');
+  }
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
