@@ -100,17 +100,18 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-Enemy.prototype.checkCollisions = function(playerNowX, playerNowY) {
+Enemy.prototype.checkCollisions = function() {
   //for each enemy check position against player position ,if in range
   //set Win to false and end the game
   //  console.log(this.y);
   //  console.log(playerNowY);
-    allEnemies.forEach(function(playerNowX, playerNowY) {
-      console.log(playerNowY);
-      var locationDiffX = playerNowY - this.x;
-      var locationDiffY = playerNowY - this.y;
-  //    console.log(locationDiffY);
-      if (locationDiffY === 0) {
+    allEnemies.forEach(function(Enemy) {
+  //    console.log(player.x);
+  //    console.log(Enemy.x);
+      var locationDiffX = Math.abs(player.x - Enemy.x);
+      var locationDiffY = player.y - Enemy.y;
+//      console.log(locationDiffX);
+      if (locationDiffX <= 2.0 && locationDiffY === 0) {
         console.log('end game');
         endGame(false);
       }
@@ -122,6 +123,6 @@ function endGame(win) {
   if (win === false) {
       console.log('you lose');
 //    modal says you lose
-    player(200, 390);
+//    player(200, 390);
   }
 };
