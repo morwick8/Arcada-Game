@@ -1,7 +1,15 @@
-// Enemies our player must avoid
+//Michelle Orwick's Frogger Arcade Game
+
+
+//Sound files were made by Mike Koenig and are available at soundbible.com
+var winSound;
+winSound = new Audio("sound/Ta-Da-SoundBible.com-1884170640.mp3");
+var loseSound;
+loseSound = new Audio("sound/Aww-Sympathy-SoundBible.com-1207094748.mp3");
+
+//Enemy class defined: they have variable speed, and location measured in this.x
+//and this.y, and they use a sprite image.
 var Enemy = function(x, y, speed = 10, sprite) {
-    //Enemies need variable speed, and location measured in this.x
-    //and this.y.
     this.x = x;
     this.y = y;
     this.speed = speed;
@@ -10,29 +18,25 @@ var Enemy = function(x, y, speed = 10, sprite) {
     this.sprite = 'images/enemy-bug.png';
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-
-// Draw the enemy on the screen, required method for game
+// This draws the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// This defines the Player class. It also has a sprite image,
+//and location defined by this.x and this.y.
 var Player = function(x, y, sprite) {
   this.x = x;
   this.y = y;
   this.sprite = 'images/char-princess-girl.png';
 };
 
+
 Player.prototype.update = function(dt) {
-    var playerNowX = this.x;
-    var playerNowY = this.y
 };
-//this is a placeholder render for player until I can figure this out
+
+//This redraws the changed location of player.
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -43,43 +47,42 @@ Player.prototype.handleInput = function(keyPress) {
   if (keyPress === 'up'){
     this.y = this.y - 80;
     if (this.y < 0) {
-      console.log("display you win modal");
-      console.log('trigger end game');
+      endGame(true);
     };
   } else if (keyPress === 'down'){
     if (this.y > 380) {
-    console.log('ignore down press');
     } else {
       this.y = this.y + 80;
     };
   } else if (keyPress === 'left'){
     if (this.x < 10) {
-    console.log('ignore left press');
     } else {
       this.x = this.x - 100;
     };
   } else if (keyPress === 'right'){
     if (this.x > 380) {
-    console.log('ignore right press');
     } else {
       this.x = this.x + 100;
     };
   };
 };
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
+
+//This sets up multiple Enemies class objects, and defines their starting
+//location and speed.
 var allEnemies = [
-  new Enemy(0,70,75),
+  new Enemy(0,70,100),
   new Enemy(0,150,200),
   new Enemy(0,230,120)
 ];
-// Place the player object in a variable called player
+
+// This sets up a Player class object.
 var player = new Player(200, 390);
 
+//Enemy movement is along the value x, and every millisecond
+// it will move some distance based on speed
+//Enemy wraps back to the beginning after it reaches the right. On every move
+//each enemy checks for collision with the player.
 Enemy.prototype.update = function(dt) {
-    //Movement is along the value x, and every millisecond
-    // it will move some distance based on speed
-    //Enemy needs to wrap back to the beginning after it reaches the right
     this.x = this.x+this.speed*dt;
     if (this.x > 450) {
       this.x = 0
@@ -87,8 +90,8 @@ Enemy.prototype.update = function(dt) {
     this.checkCollisions(player.x, player.y);
 };
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// This listens for key presses and sends the keys to the
+// Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -100,9 +103,11 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+
+//For each enemy check position against player position ,if in range
+//of the player position, set Win to false and end the game.
+
 Enemy.prototype.checkCollisions = function() {
-  //for each enemy check position against player position ,if in range
-  //set Win to false and end the game
   //  console.log(this.y);
   //  console.log(playerNowY);
     allEnemies.forEach(function(Enemy) {
@@ -111,18 +116,40 @@ Enemy.prototype.checkCollisions = function() {
       var locationDiffX = Math.abs(player.x - Enemy.x);
       var locationDiffY = player.y - Enemy.y;
 //      console.log(locationDiffX);
-      if (locationDiffX <= 2.0 && locationDiffY === 0) {
-        console.log('end game');
+      if (locationDiffX <= 10.0 && locationDiffY === 0) {
         endGame(false);
       }
 
     })
 };
 
+//Reposition the player back to its starting position.
+Player.prototype.reset = function(){
+  player.x = 200;
+  player.y = 390;
+};
+
+//At the end of the game, if the player reaches water (or player.y = 0), it wins.
+//If the player collides with an enemy, it loses.
+//At a win or a loss, a modal appears with an appropriate message along with
+//an appropriate sound.
 function endGame(win) {
-  if (win === false) {
-      console.log('you lose');
-//    modal says you lose
-//    player(200, 390);
-  }
+  if (endModal.open === false) {
+    player.x = 200;
+    player.y = 390;
+    if (win === false) {
+      document.getElementById('message').innerHTML = 'You were squashed like a Bug By a Bug!!';
+      endModal.showModal();
+      loseSound.play();
+    } else {
+      document.getElementById('message').innerHTML = 'Clearly you are smarter than a Bug!!';
+      winSound.play();
+      endModal.showModal();
+    };
+  };
+};
+
+//if a reset button were to be added, this would close the modal
+function newGame () {
+   endModal.close;
 };
