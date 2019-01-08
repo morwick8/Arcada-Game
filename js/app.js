@@ -12,19 +12,12 @@ var Enemy = function(x, y, speed = 10, sprite) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    //Movement is along the value x, and every millisecond
-    // it will move some distance based on speed
-    //Enemy needs to wrap back to the beginning after it reaches the right
-    this.x = this.x+this.speed*dt;
-    if (this.x > 450) {
-      this.x = 0
-    };
-};
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -36,15 +29,16 @@ var Player = function(x, y, sprite) {
 };
 
 Player.prototype.update = function(dt) {
-    //this is a placeholder for the player update until I can figure it out
-    //
+    var playerNowX = this.x;
+    var playerNowY = this.y
 };
 //this is a placeholder render for player until I can figure this out
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-//This is a placeholder for handling input for player until I figure this computer
+//This moves player one block at a time up, down, left, or right
+// with keypresses.  Player cannot move beyond the board squares
 Player.prototype.handleInput = function(keyPress) {
   if (keyPress === 'up'){
     this.y = this.y - 80;
@@ -75,12 +69,23 @@ Player.prototype.handleInput = function(keyPress) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
-  new Enemy(0,63,50),
-  new Enemy(0,146,200),
-  new Enemy(0,229,100)
+  new Enemy(0,70,75),
+  new Enemy(0,150,200),
+  new Enemy(0,230,120)
 ];
 // Place the player object in a variable called player
 var player = new Player(200, 390);
+
+Enemy.prototype.update = function(dt) {
+    //Movement is along the value x, and every millisecond
+    // it will move some distance based on speed
+    //Enemy needs to wrap back to the beginning after it reaches the right
+    this.x = this.x+this.speed*dt;
+    if (this.x > 450) {
+      this.x = 0
+    };
+    this.checkCollisions(player.x, player.y);
+};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -94,3 +99,29 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+Enemy.prototype.checkCollisions = function(playerNowX, playerNowY) {
+  //for each enemy check position against player position ,if in range
+  //set Win to false and end the game
+  //  console.log(this.y);
+  //  console.log(playerNowY);
+    allEnemies.forEach(function(playerNowX, playerNowY) {
+      console.log(playerNowY);
+      var locationDiffX = playerNowY - this.x;
+      var locationDiffY = playerNowY - this.y;
+  //    console.log(locationDiffY);
+      if (locationDiffY === 0) {
+        console.log('end game');
+        endGame(false);
+      }
+
+    })
+};
+
+function endGame(win) {
+  if (win === false) {
+      console.log('you lose');
+//    modal says you lose
+    player(200, 390);
+  }
+};
