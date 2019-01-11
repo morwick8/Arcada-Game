@@ -27,9 +27,9 @@ Enemy.prototype.render = function() {
 // This defines the Player class. It also has a sprite image,
 //and location defined by this.x and this.y.
 var Player = function(x, y, sprite) {
-  this.x = x;
-  this.y = y;
-  this.sprite = 'images/char-princess-girl.png';
+    this.x = x;
+    this.y = y;
+    this.sprite = 'images/char-princess-girl.png';
 };
 
 
@@ -44,35 +44,37 @@ Player.prototype.render = function() {
 //This moves player one block at a time up, down, left, or right
 // with keypresses.  Player cannot move beyond the board squares
 Player.prototype.handleInput = function(keyPress) {
-  if (keyPress === 'up'){
-    this.y = this.y - 80;
-    if (this.y < 0) {
-      endGame(true);
+    if (keyPress === 'up'){
+        if (this.y === 70) {
+            this.y = 0;
+            endGame(true);
+        } else {
+            this.y = this.y - 80;
+        };
+    } else if (keyPress === 'down'){
+        if (this.y === 390) {
+        } else {
+            this.y = this.y + 80;
+        };
+    } else if (keyPress === 'left'){
+        if (this.x < 10) {
+        } else {
+            this.x = this.x - 100;
+        };
+    } else if (keyPress === 'right'){
+        if (this.x > 380) {
+        } else {
+            this.x = this.x + 100;
+        };
     };
-  } else if (keyPress === 'down'){
-    if (this.y > 380) {
-    } else {
-      this.y = this.y + 80;
-    };
-  } else if (keyPress === 'left'){
-    if (this.x < 10) {
-    } else {
-      this.x = this.x - 100;
-    };
-  } else if (keyPress === 'right'){
-    if (this.x > 380) {
-    } else {
-      this.x = this.x + 100;
-    };
-  };
 };
 
 //This sets up multiple Enemies class objects, and defines their starting
 //location and speed.
 var allEnemies = [
-  new Enemy(0,70,100),
-  new Enemy(0,150,200),
-  new Enemy(0,230,120)
+    new Enemy(0,70,100),
+    new Enemy(0,150,200),
+    new Enemy(0,230,120)
 ];
 
 // This sets up a Player class object.
@@ -85,7 +87,7 @@ var player = new Player(200, 390);
 Enemy.prototype.update = function(dt) {
     this.x = this.x+this.speed*dt;
     if (this.x > 450) {
-      this.x = 0
+        this.x = 0
     };
     this.checkCollisions(player.x, player.y);
 };
@@ -105,28 +107,23 @@ document.addEventListener('keyup', function(e) {
 
 
 //For each enemy check position against player position ,if in range
-//of the player position, set Win to false and end the game.
-
+//of the player position, set Win to false and end the game. Offset
+// by the size of the bug from center so that a collision with the mouth
+//or back end of the bug will trigger.
 Enemy.prototype.checkCollisions = function() {
-  //  console.log(this.y);
-  //  console.log(playerNowY);
     allEnemies.forEach(function(Enemy) {
-  //    console.log(player.x);
-  //    console.log(Enemy.x);
-      var locationDiffX = Math.abs(player.x - Enemy.x);
-      var locationDiffY = player.y - Enemy.y;
-//      console.log(locationDiffX);
-      if (locationDiffX <= 10.0 && locationDiffY === 0) {
-        endGame(false);
-      }
-
+    var locationDiffX = Math.abs(player.x - Enemy.x);
+        var locationDiffY = player.y - Enemy.y;
+        if (locationDiffX <= 75.0 && locationDiffY === 0) {
+            endGame(false);
+        }
     })
 };
 
 //Reposition the player back to its starting position.
 Player.prototype.reset = function(){
-  player.x = 200;
-  player.y = 390;
+    this.x = 200;
+    this.y = 390;
 };
 
 //At the end of the game, if the player reaches water (or player.y = 0), it wins.
@@ -134,22 +131,22 @@ Player.prototype.reset = function(){
 //At a win or a loss, a modal appears with an appropriate message along with
 //an appropriate sound.
 function endGame(win) {
-  if (endModal.open === false) {
-    player.x = 200;
-    player.y = 390;
-    if (win === false) {
-      document.getElementById('message').innerHTML = 'You were squashed like a Bug By a Bug!!';
-      endModal.showModal();
-      loseSound.play();
-    } else {
-      document.getElementById('message').innerHTML = 'Clearly you are smarter than a Bug!!';
-      winSound.play();
-      endModal.showModal();
+    if (endModal.open === false) {
+        player.x = 200;
+        player.y = 390;
+        if (win === false) {
+            document.getElementById('message').innerHTML = 'You were squashed like a Bug By a Bug!!';
+            endModal.showModal();
+            loseSound.play();
+        } else {
+            document.getElementById('message').innerHTML = 'Clearly you are smarter than a Bug!!';
+            winSound.play();
+            endModal.showModal();
+        };
     };
-  };
 };
 
 //if a reset button were to be added, this would close the modal
 function newGame () {
-   endModal.close;
+    endModal.close;
 };
